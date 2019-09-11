@@ -1,6 +1,7 @@
 import time as t
 import datetime
 
+# Will Daniel, Mo Lu, Winfred Hills
 # American Pharaoh won the Triple Crown.  
 # He won the Belmont, a 12 furlong track, with a time of 2:26.65,
 # the Kentucky Derby, a 10 furlong track, with a time of 2:03.02,
