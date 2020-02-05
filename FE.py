@@ -4,6 +4,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import auc
 from sklearn.metrics import roc_curve
 from scipy import interp
+from imblearn.over_sampling import SMOTE
 
 def FE(df, xcols, ycol, standardize=True):
     """ Prepares a feature matrix and response var from a dataset 
@@ -89,3 +90,52 @@ def plotROCCurve(clf_class, X, y, axis, color, random_state, **kwargs):
     # Plot object
     axis.plot(mean_fpr, mean_tpr, color=color,
     label=r'%s ROC (AUC = %0.2f)' % (clf_class.__name__, mean_auc),lw=2, alpha=.8)
+
+def plotROCCurve_smote(clf_class, X, y, axis, color, random_state, **kwargs):
+    """Takes in a calssification model and data set and returns a plotted ROC Curve
+    
+    Arguments:
+        clf_class -- classifiction model
+        X {numpy array} -- feature matrix to predict response variable, y
+        y {numpy array} -- response variable
+        axis {var} -- ax variable to plot the figure on
+        random_state --- For reproducibility
+    """
+
+    # KFold
+    kf = StratifiedKFold(n_splits=3,shuffle=True,random_state=random_state)
+
+    # Data Range
+    mean_fpr = np.linspace(0, 1, 100)
+
+    # initialization params
+    tprs = []
+
+    for train_index,test_index in kf.split(X,y):
+        xtr,xvl = X[train_index],X[test_index]
+        ytr,yvl = y[train_index],y[test_index]
+
+        # Use SMOTE to boost training set
+        sm = SMOTE(random_state = 33)
+        X_train_new, y_train_new = sm.fit_sample(xtr, ytr.ravel())
+
+        # fit models
+        clf = clf_class(**kwargs)
+        clf.fit(X_train_new,y_train_new)
+
+        #get prediction data
+        pred_test = clf.predict_proba(xvl)[:,1]
+
+        # ROC Curve Plotting
+        fpr, tpr, thresh = roc_curve(yvl, pred_test)
+        interp_tpr = interp(mean_fpr, fpr, tpr)
+        interp_tpr[0] = 0.0
+        tprs.append(interp_tpr)
+
+    # Return mean true positive rate & AUC
+    mean_tpr = np.mean(tprs, axis=0)
+    mean_auc = auc(mean_fpr, mean_tpr)
+
+    # Plot object
+    axis.plot(mean_fpr, mean_tpr, color=color,
+    label=r'%s ROC (AUC = %0.2f) SMOTE' % (clf_class.__name__, mean_auc),lw=2, alpha=.8)
