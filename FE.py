@@ -31,6 +31,9 @@ def FE(df, xcols, ycol, standardize=True):
     # Convert categoricals to one-hot encoding
     X = pd.get_dummies(X)
 
+    if 'callcycle_None' in X.columns:
+        X.drop("callcycle_None", axis=1, inplace=True)
+
     # save colnames
     xcolnames = X.columns
 
