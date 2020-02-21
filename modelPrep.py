@@ -6,31 +6,31 @@ from sklearn.metrics import roc_curve
 from scipy import interp
 from imblearn.over_sampling import SMOTE
 
-def FE(df, xcols, ycol, standardize=True):
+def model_prep(df, xcols, ycol, standardize=True):
     """ Prepares a feature matrix and response var from a dataset 
     
     Arguments:
         df {dataframe} -- dataframe to pass in for modeling
-        xcols {any} -- columns to use as independent var
+        xcols {any} -- columns to use as independent var, or ALL if you don't want filtering
         ycol {any} -- columns to use as response
+        standardize -- True by default. Whether you would like to standardize the dataset
     
     Returns:
-        [type] -- [description]
+        X (feature matrix), y (response variable), xcolnames
     """
     # Set up response variable 
     y = df[ycol].values.astype(np.int)
 
-    # Set up independent variables
-    X = df[xcols]
-
-    # Competitors - count instead or 1-0
-    if 'competingProducts' in X.columns:
-        X.loc[X.competingProducts.isnull(),"competingProducts"] = 0
-        X.loc[X.competingProducts != 0,'competingProducts'] = X.loc[X.competingProducts != 0,('competingProducts')].str.split(pat=";").str.len()
+    # Filter independent variables if needed
+    if xcols != "ALL":
+        X = df[xcols].copy()
+    else:
+        X = df.copy()
 
     # Convert categoricals to one-hot encoding
     X = pd.get_dummies(X)
 
+    # drop callcycle is being used for dummy encoding
     if 'callcycle_None' in X.columns:
         X.drop("callcycle_None", axis=1, inplace=True)
 
