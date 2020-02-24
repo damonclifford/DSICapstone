@@ -2,6 +2,16 @@ import numpy as np
 import pandas as pd
 import sklearn
 import json
+import os
+
+# Use the directory where this file is located
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
+# Opening columnname dictionary
+with open('columnnames_dict.json', 'r') as fp:
+    columnlist_dict = json.load(fp)
 
 def cleanData(filepath):
     # Load in raw dataset
@@ -18,11 +28,7 @@ def cleanData(filepath):
 
     return df
 
-def filterAndRename(df):
-    # Opening columnname dictionary
-    with open('columnnames_dict.json', 'r') as fp:
-        columnlist_dict = json.load(fp)
-
+def filterAndRename(df, columnlist_dict=columnlist_dict):
     # Subset down the initial dataset
     df = df[columnlist_dict.keys()]
 

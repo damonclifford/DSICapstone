@@ -13,9 +13,9 @@ from sklearn.feature_selection import RFE, SelectKBest, chi2, f_classif, mutual_
 from sklearn.linear_model import RidgeCV, LassoCV, Ridge, Lasso
 
 # Custom Python Files
-from dataPrep import cleanData
-from modelPrep import model_prep
-from modelPrep import plotROCCurve
+from dataprep.dataPrep import cleanData
+from dataprep.modelPrep import model_prep
+from dataprep.modelPrep import plotROCCurve
 
 #Loading the dataset
 df = cleanData('PSCCustomerData.csv')
