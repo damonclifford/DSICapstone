@@ -14,6 +14,21 @@ with open('columnnames_dict.json', 'r') as fp:
     columnlist_dict = json.load(fp)
 
 def cleanData(filepath):
+    """ Summary Actions: 
+        1. filterAndRename method: 
+            uses columnnames_dict.json dictionary to filter down and re-map column names
+        2. missingData_imputation:
+            manually created data imputation of missing values in each columns
+        3. variable_transformation:
+            transform the variables manually based on designed criteria
+    
+    Arguments:
+        filepath {string} -- file path of the dataframe 
+    
+    Returns:
+        df [pandas dataframe] -- returns a cleaned data set
+        
+    """
     # Load in raw dataset
     df = pd.read_csv(filepath)
 
@@ -29,6 +44,17 @@ def cleanData(filepath):
     return df
 
 def filterAndRename(df, columnlist_dict=columnlist_dict):
+    """ Filter and rename dataframe
+    Arguments:
+        df {pandas dataframe} 
+    
+    Keyword Arguments:
+        columnlist_dict {dictionary} -- loaded in via json file. Needs to be in same working directory as this file
+    
+    Returns:
+        df -- returns a filtered and renamed dataframe
+    """
+
     # Subset down the initial dataset
     df = df[columnlist_dict.keys()]
 
@@ -38,6 +64,15 @@ def filterAndRename(df, columnlist_dict=columnlist_dict):
     return df
 
 def missingData_imputation(df):
+    """ Manually create formulas to decide missing data imputation
+
+    Arguments:
+        df {pandas dataframe} -- cleaned dataframe
+
+    Returns:
+        df
+    """
+
     # Missing Value Imputation
 
     # Assume values of zero
@@ -74,6 +109,15 @@ def missingData_imputation(df):
     return df
 
 def variable_transformation(df):
+    """Manually create formulas to transform variables
+    
+    Arguments:
+        df {pandas dataframe}
+    
+    Returns:
+        df
+    """
+    
     # Create a "callcycle_numeric" columns that breaks out the call cycle from categorical to numeric
     cc = {'Monthly':'12', 'Quarterly':'4', 'Yearly':'1','Half Year':'2', 'Every Other Month':'6', 'None':'0'}
     df["callcycle_numeric"] = df['callcycle'].replace(cc,inplace=False)
