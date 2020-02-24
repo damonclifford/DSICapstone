@@ -4,31 +4,28 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+
 #import statsmodels.api as smimport % matplotlib inline
+from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.feature_selection import RFE, SelectKBest, chi2, f_classif, mutual_info_classif
 from sklearn.linear_model import RidgeCV, LassoCV, Ridge, Lasso
-from importlib import reload
-import FE
-reload(FE)
-from FE import FE
+
+# Custom Python Files
+from dataprep.dataPrep import cleanData
+from dataprep.modelPrep import model_prep
+from dataprep.modelPrep import plotROCCurve
 
 #Loading the dataset
-df = pd.read_csv('data.csv')
+df = cleanData('PSCCustomerData.csv')
 
-xcols = ['usecompetitors','sessions', 'FF', 'strategic', 'callcycle']
+xcols = ['usecompetitors','sessions', 'FF', 'strategic', 'callcycle_numeric']
 
-ycol = df['churn']
+ycol = ['churn']
 
- 
-cc = {'Monthly':'12', 'Quarterly':'4', 'Yearly':'1','Half Year':'2', 'Every Other Month':'6', 'None':'0'}
-df['callcycle'].replace(cc,inplace=True)
-df['callcycle']= pd.to_numeric(df['callcycle'])
-df['callcycle']
-
-X, y, xcolnames = FE(df,xcols,ycol, standardize=False)
-
+X, y, xcolnames = model_prep(df,xcols,ycol, standardize=False)
 
 sel_chi2 = SelectKBest(chi2, k=4)    # select 4 features
 X_train_chi2 = sel_chi2.fit_transform(X, y)
