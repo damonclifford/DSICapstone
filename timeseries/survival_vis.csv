@@ -1,0 +1,7 @@
+usecompetitors,sessions,FF,strategic,callcycle_Every.Other.Month,callcycle_Half.Year,callcycle_Monthly,callcycle_None,callcycle_Quarterly,callcycle_Yearly,days_live
+0,10,1,1,1,0,0,0,0,0,365
+0,10,1,1,0,1,0,0,0,0,365
+0,10,1,1,0,0,1,0,0,0,365
+0,10,1,1,0,0,0,1,0,0,365
+0,10,1,1,0,0,0,0,1,0,365
+0,10,1,1,0,0,0,0,0,1,365
