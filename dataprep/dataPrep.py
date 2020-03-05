@@ -148,4 +148,10 @@ def variable_transformation(df):
     df["daysAsCustomer"] = ((pd.datetime.today() - df["firstdealDT"]).dt.days).astype(int)
     df.drop(["createDT"], axis=1, inplace=True)
 
+    # Create a column that shows customer touch points/quarter
+    df["callsPerQuarter"] = ((df["timescontacted"] / df["daysAsCustomer"])*(365/4))
+
+    # Create a column that shows sessions/day
+    df["sessionsPerDay"] = ((df["sessions"] / df["daysAsCustomer"]))
+
     return df

@@ -6,7 +6,7 @@ from sklearn.metrics import roc_curve
 from scipy import interp
 from imblearn.over_sampling import SMOTE
 
-def model_prep(df, xcols, ycol, standardize=True):
+def model_prep(df, xcols, ycol, standardize=True, higherTerms=False, termDict={}):
     """ Prepares a feature matrix and response var from a dataset 
     
     Arguments:
@@ -27,12 +27,20 @@ def model_prep(df, xcols, ycol, standardize=True):
     else:
         X = df.copy()
 
+    # Add in higher level terms if specified
+    if higherTerms:
+        for i in termDict:
+            for j in range(termDict[i]-1):
+                name = i + "_" + str(j+2) # Create name for dataset
+
+                X[name] = X[i]**(j+2) # Transform the original variable to desired higher term
+
     # Convert categoricals to one-hot encoding
     X = pd.get_dummies(X)
 
     # drop callcycle is being used for dummy encoding
-    if 'callcycle_None' in X.columns:
-        X.drop("callcycle_None", axis=1, inplace=True)
+    if 'callcycle_Yearly' in X.columns:
+        X.drop("callcycle_Yearly", axis=1, inplace=True)
 
     # save colnames
     xcolnames = X.columns
