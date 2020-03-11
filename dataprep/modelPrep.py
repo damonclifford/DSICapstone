@@ -3,10 +3,11 @@ import pandas as pd
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import auc
 from sklearn.metrics import roc_curve
+from sklearn.preprocessing import PolynomialFeatures
 from scipy import interp
 from imblearn.over_sampling import SMOTE
 
-def model_prep(df, xcols, ycol, standardize=True, higherTerms=False, termDict={}):
+def model_prep(df, xcols, ycol, standardize=True, higherTerms=False, termDict={}, interactionTerms=True, interactionList=[]):
     """ Prepares a feature matrix and response var from a dataset 
     
     Arguments:
@@ -21,19 +22,30 @@ def model_prep(df, xcols, ycol, standardize=True, higherTerms=False, termDict={}
     # Set up response variable 
     y = df[ycol].values.astype(np.int)
 
-    # Filter independent variables if needed
-    if xcols != "ALL":
-        X = df[xcols].copy()
-    else:
-        X = df.copy()
-
     # Add in higher level terms if specified
     if higherTerms:
         for i in termDict:
             for j in range(termDict[i]-1):
                 name = i + "_" + str(j+2) # Create name for dataset
 
-                X[name] = X[i]**(j+2) # Transform the original variable to desired higher term
+                df[name] = df[i]**(j+2) # Transform the original variable to desired higher term
+
+                xcols.append(name) # add the newly created column to filter list
+
+    # Add in interaction level terms if specified
+    if interactionTerms:
+        for i in interactionList:
+            name = i[0] + ' ' + i[1] # create the column name
+
+            df[name] = df[i[0]]*df[i[1]] # create the interaction column
+
+            xcols.append(name) # add the newly created column to filter list
+
+    # Filter independent variables if needed
+    if xcols != "ALL":
+        X = df[xcols].copy()
+    else:
+        X = df.drop(ycol, axis=1, inplace=False)
 
     # Convert categoricals to one-hot encoding
     X = pd.get_dummies(X)
