@@ -12,7 +12,6 @@
     "Create Date" : "createDT", 
     "Number of Sessions": "sessions", 
     "FF Working": "FF",
-    "Gauge": "gauge",
     "Associated Contacts": "assoccontacts",
     "Renewal Date": "renewalDT",
     "Has Associated Prediction Lead": "associatedpredictionlead",
