@@ -60,14 +60,15 @@ def model_prep(df, xcols, ycol, standardize=True, higherTerms=False, termDict={}
     # Build Feature Matrix
     X = X.values.astype(np.float)
 
-    # Standardize
+    # Control what we send back based on if we are standardizing or not
     if standardize:
         X_mean = X.mean(axis=0)
         X_std = X.std(axis=0)
         X = (X - X_mean)/X_std
 
-    # Return X, y, and X_metrics (for potential use later)
-    return X, y, xcolnames
+        return X, y, X_mean, X_std, xcolnames
+    else:
+        return X, y, xcolnames
 
 def plotROCCurve(clf_class, X, y, axis, color, random_state, **kwargs):
     """Takes in a calssification model and data set and returns a plotted ROC Curve
@@ -150,7 +151,7 @@ def plotROCCurve_smote(clf_class, X, y, axis, color, random_state, **kwargs):
         pred_test = clf.predict_proba(xvl)[:,1]
 
         # ROC Curve Plotting
-        fpr, tpr, thresh = roc_curve(yvl, pred_test)
+        fpr, tpr, _ = roc_curve(yvl, pred_test)
         interp_tpr = interp(mean_fpr, fpr, tpr)
         interp_tpr[0] = 0.0
         tprs.append(interp_tpr)

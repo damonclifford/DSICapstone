@@ -1,4 +1,5 @@
-{   "Number of Pageviews": "pageviews",
+{   "Company ID": "companyID",
+    "Number of Pageviews": "pageviews",
     "Admins": "admins",
     "Number of Employees": "employees",
     "Competitors In Use": "usecompetitors",
