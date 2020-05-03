@@ -23,6 +23,10 @@ This is a convenient python file that can be called to produce the final logisti
 
 This jupyter notebook looks at the specific Logistic Model against the baseline models: random forest and XGBoost
 
-### Feature_visualization.ipynb
+### feature_visualization.ipynb
 
 This jupyter notebook explore feature visualization for the final logistic regression model pulled from finalmodel.py
+
+### timeseries
+
+In our data analysis we also explore time series models, specifically cox proportional hazards model. This file has the work done for that analysis. Specifically, "Surv Analysis.ipynb" is a jupyter notebook that has our final cox proportional hazards model.
