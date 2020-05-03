@@ -102,7 +102,7 @@ def plotROCCurve(clf_class, X, y, axis, color, random_state, **kwargs):
         pred_test = clf.predict_proba(xvl)[:,1]
 
         # ROC Curve Plotting
-        fpr, tpr, thresh = roc_curve(yvl, pred_test)
+        fpr, tpr, _ = roc_curve(yvl, pred_test)
         interp_tpr = interp(mean_fpr, fpr, tpr)
         interp_tpr[0] = 0.0
         tprs.append(interp_tpr)
